@@ -1,5 +1,29 @@
-import { Box, Typography, Container, Paper, Grid, Card, CardMedia, CardContent } from "@mui/material";
-import React from "react";
+import { Box, Typography, Card, CardMedia, CardContent, keyframes } from "@mui/material";
+import * as React from 'react';
+import {useEffect} from "react";
+
+// Define keyframes for animations
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
 
 export const Home = () => {
     const weProvide = [
@@ -21,55 +45,145 @@ export const Home = () => {
             description:
                 "Manage users, roles, and permissions with granular control and multi-factor authentication options.",
         },
-    ]
+    ];
 
     return (
-        <Box display={"flex"} flexDirection={"column"} gap={4} m={2}>
-            <Typography textAlign={"center"} variant="h4" gutterBottom marginTop={"12px"}>
+        <Box
+            display={"flex"}
+            flexDirection={"column"}
+            gap={4}
+            sx={{
+                background: "linear-gradient(135deg, #e3f2fd, #bbdefb)",
+                color: "white",
+                padding: 4,
+                borderRadius: 2,
+                boxShadow: 3,
+                animation: `${fadeIn} 1s ease-in-out`,
+            }}
+        >
+            <Typography
+                textAlign={"center"}
+                variant="h4"
+                gutterBottom
+                marginTop={"12px"}
+                sx={{
+                    fontWeight: "bold",
+                    color: "#0d47a1",
+                    animation: `${slideIn} 1s ease-in-out`,
+                }}
+            >
                 Dashboard Resources Management & Cloud Security
             </Typography>
-            <Typography variant="body1" width={"66%"}>
+            <Typography
+                variant="body1"
+                width={"66%"}
+                sx={{
+                    textAlign: "center",
+                    margin: "0 auto",
+                    color: "#1a237e",
+                    animation: `${fadeIn} 1.2s ease-in-out`,
+                }}
+            >
                 This project is a comprehensive dashboard tool built for managing resources and enhancing
                 cloud security. Designed with usability and protection in mind, it provides real-time
                 monitoring, analysis, and control of cloud-based systems.
             </Typography>
 
-            <Typography variant="body1" width={"66%"}>
+            <Typography
+                variant="body1"
+                width={"66%"}
+                sx={{
+                    textAlign: "center",
+                    margin: "0 auto",
+                    color: "#1a237e",
+                    animation: `${fadeIn} 1.4s ease-in-out`,
+                }}
+            >
                 The dashboard offers a sleek interface with fast and responsive interaction powered by
                 HTMX, Tailwind CSS, and FastAPI. Whether managing local resources or cloud services,
                 our system is built to be secure, simple, and effective.
             </Typography>
-            <Box display={"flex"} flexDirection={"column"} >
-                <Typography variant="body1" width={"66%"}>
+            <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+                <Typography
+                    variant="h5"
+                    fontWeight={"bold"}
+                    width={"66%"}
+                    sx={{
+                        color: "#0d47a1",
+                        textAlign: "center",
+                        animation: `${fadeIn} 1.6s ease-in-out`,
+                    }}
+                >
                     Key features include:
                 </Typography>
                 <Box px={2}>
-                <ul>
-
-                    <li style={{ color: "black" }}>🔒 Secure user authentication and role-based access</li>
-                    <li style={{ color: "black" }}>📊 Real-time resource tracking and visualizations</li>
-                    <li style={{ color: "black" }}>🚨 Immediate security alerts and notifications</li>
-                    <li style={{ color: "black" }}>🛡️ Encrypted data handling using modern cryptography</li>
-                </ul>
+                    <ul style={{ listStyleType: "none", padding: 0 }}>
+                        <li style={{ color: "#1a237e", marginBottom: "8px" }}>
+                            🔒 Secure user authentication and role-based access
+                        </li>
+                        <li style={{ color: "#1a237e", marginBottom: "8px" }}>
+                            📊 Real-time resource tracking and visualizations
+                        </li>
+                        <li style={{ color: "#1a237e", marginBottom: "8px" }}>
+                            🚨 Immediate security alerts and notifications
+                        </li>
+                        <li style={{ color: "#1a237e", marginBottom: "8px" }}>
+                            🛡️ Encrypted data handling using modern cryptography
+                        </li>
+                    </ul>
                 </Box>
-                <Typography variant="body1" sx={{ mt: 2 }}>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        mt: 2,
+                        textAlign: "center",
+                        margin: "0 auto",
+                        color: "#1a237e",
+                        animation: `${fadeIn} 1.8s ease-in-out`,
+                    }}
+                >
                     This tool is perfect for cloud administrators, IT professionals, and organizations
                     seeking efficient and secure cloud infrastructure management.
                 </Typography>
             </Box>
-            <Box display={"flex"} flexWrap={"wrap"} justifyContent={"center"} gap={12}>
+            <Box
+                display={"flex"}
+                flexWrap={"wrap"}
+                justifyContent={"center"}
+                gap={4}
+                sx={{ marginTop: 4 }}
+            >
                 {weProvide.map((val, idx) => (
-                    <Card sx={{ maxWidth: 345 }}>
+                    <Card
+                        key={idx}
+                        sx={{
+                            maxWidth: 345,
+                            borderRadius: 3,
+                            boxShadow: 5,
+                            transition: "transform 0.3s, box-shadow 0.3s",
+                            animation: `${fadeIn} 1s ease-in-out ${idx * 0.2}s`,
+                            "&:hover": {
+                                transform: "scale(1.05)",
+                                boxShadow: 10,
+                            },
+                        }}
+                    >
                         <CardMedia
-                            sx={{ height: 200, objectFit: "contain" }}
+                            sx={{ height: 200, objectFit: "cover" }}
                             image={val.image}
                             title="image not found"
                         />
                         <CardContent>
-                            <Typography color="black" gutterBottom variant="h5" component="div">
+                            <Typography
+                                color="primary"
+                                gutterBottom
+                                variant="h5"
+                                component="div"
+                                sx={{ fontWeight: "bold", color: "#0d47a1" }}
+                            >
                                 {val.title}
                             </Typography>
-                            <Typography variant="body2" color="black">
+                            <Typography variant="body2" color="#1a237e">
                                 {val.description}
                             </Typography>
                         </CardContent>
