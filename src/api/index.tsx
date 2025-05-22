@@ -1,12 +1,5 @@
-// API service for making REST API calls to the backend
-
-// Update the API URL to use environment variables with better fallback
 const API_URL = "http://127.0.0.1:8000/api"
 
-// API service for making REST API calls to the backend
-
-// Update the API URL to use environment variables with better fallback
-// Types
 export interface CloudResource {
     id: string
     name: string
@@ -17,8 +10,6 @@ export interface CloudResource {
     underAttack: boolean
 }
 
-// Add a function to check if we're using mock data
-// This now checks if the API is actually reachable
 export function isUsingMockData(): boolean {
     return false
 }
@@ -72,7 +63,6 @@ const mockResources: CloudResource[] = [
     },
 ]
 
-// Generic fetch function with better error handling
 //@ts-ignore
 async function fetchWithErrorHandling<T>(url: string, options?: RequestInit): Promise<T> {
     try {
@@ -106,10 +96,7 @@ async function fetchWithErrorHandling<T>(url: string, options?: RequestInit): Pr
     }
 }
 
-// Update the resource API functions to use mock data in development when needed
-
 export const resourceApi = {
-    // Get all resources
     //@ts-ignore
     getResources: async (): Promise<CloudResource[]> => {
         try {
@@ -148,7 +135,6 @@ export const resourceApi = {
             }
         } catch (error) {
             console.log("Using mock createResource due to error or development mode")
-            // Create a mock resource
             const resource = {
                 id: (Math.floor(Math.random() * 1000) + 6).toString(),
                 name: name,
@@ -159,9 +145,7 @@ export const resourceApi = {
                 underAttack: false,
             }
 
-            // Simulate resource becoming available after 2 seconds
             setTimeout(() => {
-                // This would update the resource in a real app
                 console.log("Resource status changed to running:", resource.id)
             }, 2000)
 
@@ -169,7 +153,6 @@ export const resourceApi = {
         }
     },
 
-    // Delete a resource
     //@ts-ignore
     deleteResource: async (id: string): Promise<void> => {
         try {
@@ -178,15 +161,12 @@ export const resourceApi = {
             })
         } catch (error) {
             console.log("Using mock deleteResource due to error or development mode for resource:", id)
-            // Just return, no need to do anything in mock mode
             return
         }
     },
 }
 
-// Update the attack API functions to use mock data in development when needed
 export const attackApi = {
-    // Simulate an attack
     //@ts-ignore
     simulateAttack: async (resourceId: string, attackType: string): Promise<void> => {
         try {
@@ -202,49 +182,7 @@ export const attackApi = {
             })
         } catch (error) {
             console.log("Using mock simulateAttack due to error or development mode:", resourceId, attackType)
-            // Just return, the WebSocket service will handle the mock attack
             return
-        }
-    },
-
-    // Deploy a countermeasure
-    //@ts-ignore
-
-    deployCountermeasure: async (attackId: string): Promise<void> => {
-        try {
-            await fetchWithErrorHandling(`${API_URL}/countermeasures/countermeasures/deploy`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    attack_id: attackId,
-                }),
-            })
-        } catch (error) {
-            console.log("Using mock deployCountermeasure due to error or development mode for attack:", attackId)
-            // Just return, the WebSocket service will handle the mock countermeasure
-            return
-        }
-    },
-}
-
-// Update the log API functions to use mock data in development when needed
-export const logApi = {
-    // Get logs with optional resource filter
-    //@ts-ignore
-    getLogs: async (resourceId?: string, limit = 100): Promise<any[]> => {
-        try {
-            const url = new URL(`${API_URL}/logs/`)
-            if (resourceId) {
-                url.searchParams.append("resource_id", resourceId)
-            }
-            url.searchParams.append("limit", limit.toString())
-
-            return await fetchWithErrorHandling<any[]>(url.toString())
-        } catch (error) {
-            console.log("Using mock getLogs due to error or development mode")
-            return [] // Return empty logs, the WebSocket service will handle mock logs
         }
     },
 }

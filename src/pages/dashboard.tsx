@@ -11,12 +11,10 @@ import {LogMonitor} from "./dashboard/logMonitor";
 import {CountermeasureSystem} from "./dashboard/counter";
 export const Dashboard = () => {
     const [resources, setResources] = useState<CloudResource[]>([])
-    const [isLoading, setIsLoading] = useState(true)
     const [resourcesId, setResourcesId] = useState()
     const [logsMonitor, setLogsMonitor] = useState<any[]>([])
     //@ts-ignore
     const handleLogs = async () => {
-        setIsLoading(true)
         try {
             const response = await fetch("http://127.0.0.1:8000/api/logs/logs", {
                 method: "GET",
@@ -34,7 +32,6 @@ export const Dashboard = () => {
         } catch (err: any) {
             console.error("Error fetching logs:", err)
         } finally {
-            setIsLoading(false)
         }
     }
     const [isSocket, setIsSocket] = useState(false)
@@ -49,29 +46,18 @@ export const Dashboard = () => {
 
          // cleanup on unmount
     }, [isSocket])
-    const [selectedResource, setSelectedResource] = useState<string | undefined>(undefined)
-    const { logs, attacks, sendMessage, isConnected, isConnecting, connectionError, connect, usingMockData } =
+    const {  attacks, sendMessage, usingMockData } =
         useWebSocket()
     
 
     const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([])
-    const [activeAttacks, setActiveAttacks] = useState<
-        {
-            resourceId: string
-            attackType: string
-            technique: string
-        }[]
-    >([])
 
-    // Load resources on component mount
     useEffect(() => {
         fetchResources()
     }, [])
 
-    // Function to fetch resources from the API
     //@ts-ignore
     const fetchResources = async () => {
-        setIsLoading(true)
         try {
             const data = await resourceApi.getResources()
             setResources(data)
@@ -82,7 +68,6 @@ export const Dashboard = () => {
                 variant: "destructive",
             })
         } finally {
-            setIsLoading(false)
         }
     }
     //@ts-ignore
@@ -111,17 +96,6 @@ export const Dashboard = () => {
             setResources((prev) =>
                 prev.map((resource) => (resource.id === resourceId ? { ...resource, underAttack: true } : resource)),
             )
-
-            // Add to active attacks
-            setActiveAttacks((prev) => [
-                ...prev,
-                {
-                    resourceId,
-                    attackType,
-                    technique: options?.technique || attackType,
-                },
-            ])
-
             toast({
                 title: "Attack Simulation Started",
                 description: `Simulating ${attackType} attack on ${resourceName}`,
@@ -139,15 +113,7 @@ export const Dashboard = () => {
     const handleDeployCountermeasure = async (attackId: string) => {
             window.location.reload()            
     }
-
-    const handleStartScan = (resourceId: string) => {
-        // This function is called when a vulnerability scan is started
-        toast({
-            title: "Vulnerability Scan Started",
-            description: `Scanning resource for vulnerabilities...`,
-        })
-    }
-
+    
     return (
         <Grid>
             <Grid gap={2} margin={5}>

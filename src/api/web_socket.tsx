@@ -33,6 +33,7 @@ export function useWebSocket() {
     const [logs, setLogs] = useState<LogMessage[]>([])
     const [attacks, setAttacks] = useState<AttackEvent[]>([])
     const socketRef = useRef<WebSocket | null>(null)
+    //@ts-ignore
     const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
     const reconnectAttemptsRef = useRef(0)
     const maxReconnectAttempts = 5
@@ -51,7 +52,7 @@ export function useWebSocket() {
                     timestamp: new Date().toISOString(),
                     resourceId: "1",
                     resourceName: "Mock Resource",
-                    attackType: attackType,
+                    attackType: attackType as any,
                     status: "detected",
                     details: getAttackDetails(attackType),
                 }
@@ -199,7 +200,6 @@ export function useWebSocket() {
         }
     }
 
-    // Initial connect
     useEffect(() => {
         connect()
         return () => {
@@ -207,7 +207,6 @@ export function useWebSocket() {
         }
     }, [connect, disconnect])
 
-    // Auto reconnect if switching mock mode
     useEffect(() => {
         if (!isConnected && !isConnecting) {
             connect()
@@ -229,7 +228,6 @@ export function useWebSocket() {
 }
 
 
-// Helper function to get attack details based on type
 function getAttackDetails(attackType: string): string {
     switch (attackType) {
         case "format-string":
@@ -242,21 +240,5 @@ function getAttackDetails(attackType: string): string {
             return "Stack buffer overflow detected, potentially overwriting return address and function pointers"
         default:
             return "Unknown attack vector detected"
-    }
-}
-
-// Helper function to get countermeasure details based on attack type
-function getCountermeasureDetails(attackType: string): string {
-    switch (attackType) {
-        case "format-string":
-            return "Implemented format string sanitization and compiler protections"
-        case "off-by-one":
-            return "Applied bounds checking and buffer size validation"
-        case "heap-overflow":
-            return "Implemented heap canaries and memory allocation validation"
-        case "stack-overflow":
-            return "Deployed stack canaries and non-executable stack protection"
-        default:
-            return "Applied generic memory protection countermeasures"
     }
 }
